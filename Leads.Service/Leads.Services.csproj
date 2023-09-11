@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Leads.DbAdapter\Leads.DbAdapter.csproj" />
+    <ProjectReference Include="..\Leads.Models\Leads.Models.csproj" />
+  </ItemGroup>
+
+</Project>

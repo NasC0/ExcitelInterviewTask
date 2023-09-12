@@ -19,6 +19,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leads.WebApi", "Leads.WebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leads.Database.Ef", "Leads.Database.Ef\Leads.Database.Ef.csproj", "{1145D28C-B4A2-4E70-8859-6F225ABB7888}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{9A68243F-1D5A-444C-9154-4B6AF1669161}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leads.WebApi.UnitTests", "Tests\Leads.WebApi.UnitTests\Leads.WebApi.UnitTests.csproj", "{910BE600-B382-452A-8E42-F06442DDE062}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +57,10 @@ Global
 		{1145D28C-B4A2-4E70-8859-6F225ABB7888}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1145D28C-B4A2-4E70-8859-6F225ABB7888}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1145D28C-B4A2-4E70-8859-6F225ABB7888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{910BE600-B382-452A-8E42-F06442DDE062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{910BE600-B382-452A-8E42-F06442DDE062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{910BE600-B382-452A-8E42-F06442DDE062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{910BE600-B382-452A-8E42-F06442DDE062}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +69,7 @@ Global
 		{40895AB4-BEBB-4993-9B76-8CCCA1CA6905} = {47660711-D44C-4730-9BEB-22EE18603DA5}
 		{0A66BE01-D566-46B9-B784-906E523A7A43} = {47660711-D44C-4730-9BEB-22EE18603DA5}
 		{1145D28C-B4A2-4E70-8859-6F225ABB7888} = {47660711-D44C-4730-9BEB-22EE18603DA5}
+		{910BE600-B382-452A-8E42-F06442DDE062} = {9A68243F-1D5A-444C-9154-4B6AF1669161}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8427BE6D-D362-49C3-BB40-E6571CFFFED8}

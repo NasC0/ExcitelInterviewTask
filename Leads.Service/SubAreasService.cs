@@ -1,13 +1,16 @@
-﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("LeadsService.Services.Tests")]
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+
+using Leads.DbAdapter;
+using Leads.Models;
+using Leads.Services.Contracts;
+
+[assembly: InternalsVisibleTo("LeadsService.Services.Tests")]
 namespace Leads.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using DbAdapter;
-    using Models;
-
-    public class SubAreasService
+    public class SubAreasService : ISubAreasService
     {
         private readonly ISubAreasDb subAreasDb;
 

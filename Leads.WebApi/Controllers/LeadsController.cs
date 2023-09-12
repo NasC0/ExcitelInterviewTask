@@ -1,19 +1,21 @@
-﻿namespace Leads.WebApi.Controllers
-{
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
-    using Leads.Models;
-    using Leads.Services;
-    using Leads.WebApi.Models;
+﻿using System;
+using System.Threading.Tasks;
 
+using Leads.Models;
+using Leads.Services.Contracts;
+using Leads.WebApi.Models;
+
+using Microsoft.AspNetCore.Mvc;
+
+namespace Leads.WebApi.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     public class LeadsController : ControllerBase
     {
-        private readonly LeadsService leadsService;
+        private readonly ILeadsService leadsService;
 
-        public LeadsController(LeadsService leadsService)
+        public LeadsController(ILeadsService leadsService)
         {
             this.leadsService = leadsService;
         }

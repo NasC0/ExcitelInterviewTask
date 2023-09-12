@@ -1,18 +1,20 @@
-﻿namespace Leads.WebApi.Controllers
-{
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Mvc;
-    using Leads.Models;
-    using Leads.Services;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
+using Leads.Models;
+using Leads.Services.Contracts;
+
+using Microsoft.AspNetCore.Mvc;
+
+namespace Leads.WebApi.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     public class SubAreasController : ControllerBase
     {
-        private readonly SubAreasService subAreasService;
+        private readonly ISubAreasService subAreasService;
 
-        public SubAreasController(SubAreasService subAreasService)
+        public SubAreasController(ISubAreasService subAreasService)
         {
             this.subAreasService = subAreasService;
         }

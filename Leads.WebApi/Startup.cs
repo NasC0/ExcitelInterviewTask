@@ -1,21 +1,25 @@
-﻿namespace Leads.WebApi
-{
-    using System;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
-    using System.IO;
-    using System.Reflection;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.EntityFrameworkCore;
-    using Swashbuckle.AspNetCore.Swagger;
-    using Leads.Database.Ef;
-    using Leads.Database.File;
-    using Leads.Database.Static;
-    using Leads.DbAdapter;
-    using Leads.Services;
+﻿using System;
+using System.IO;
+using System.Reflection;
 
+using Leads.Database.Ef;
+using Leads.Database.File;
+using Leads.Database.Static;
+using Leads.DbAdapter;
+using Leads.Services;
+using Leads.Services.Contracts;
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+using Swashbuckle.AspNetCore.Swagger;
+
+namespace Leads.WebApi
+{
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -54,8 +58,8 @@
                     throw new NotImplementedException();
             }
 
-            services.AddScoped<LeadsService>();
-            services.AddScoped<SubAreasService>();
+            services.AddScoped<ILeadsService, LeadsService>();
+            services.AddScoped<ISubAreasService, SubAreasService>();
 
             // Register the Swagger generator
             services.AddSwaggerGen(c =>

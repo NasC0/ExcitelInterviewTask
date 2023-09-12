@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+
+using AutoFixture;
 
 using FluentAssertions;
 
@@ -12,7 +15,7 @@ using Moq;
 
 using Xunit;
 
-namespace Leads.WebApi.UnitTests
+namespace Leads.WebApi.UnitTests.Tests
 {
     [Trait("Category", "Controller")]
     [Trait("Category", "Unit")]
@@ -20,22 +23,19 @@ namespace Leads.WebApi.UnitTests
     {
         private readonly Mock<ISubAreasService> _subAreasMock = new Mock<ISubAreasService>();
         private readonly SubAreasController _controller;
+        private readonly Fixture _fixutre;
 
-        public SubAreasControllerTests() => _controller = new SubAreasController(_subAreasMock.Object);
+        public SubAreasControllerTests()
+        {
+            _controller = new SubAreasController(_subAreasMock.Object);
+            _fixutre = new Fixture();
+        }
 
         [Fact(DisplayName = "Calling the Get endpoint should return a list of SubAreaViewModel")]
         public async Task Get_ReturnsSubAreasList()
         {
             // Arrange
-            List<SubAreaViewModel> subAreas = new List<SubAreaViewModel>
-            {
-                new SubAreaViewModel
-                {
-                    Id = 1,
-                    Name = "Test",
-                    PinCode = "1234"
-                }
-            };
+            List<SubAreaViewModel> subAreas = _fixutre.CreateMany<SubAreaViewModel>(3).ToList();
 
             _subAreasMock
                 .Setup(x => x.GetAll())
@@ -58,13 +58,13 @@ namespace Leads.WebApi.UnitTests
                 .Setup(x => x.GetAll())
                 .ThrowsAsync(new Exception())
                 .Verifiable();
-            
+
             // Act/Assert
             await _controller
                 .Invoking(c => c.Get())
                 .Should()
                 .ThrowAsync<Exception>();
-            
+
             _subAreasMock.Verify(sas => sas.GetAll(), Times.Once);
         }
 
@@ -73,27 +73,20 @@ namespace Leads.WebApi.UnitTests
         public async Task GetByPinCode_WithValidPinCode_ReturnsFilteredSubAreasList()
         {
             // Arrange
-            List<SubAreaViewModel> subAreas = new List<SubAreaViewModel>
-            {
-                new SubAreaViewModel
-                {
-                    Id = 1,
-                    Name = "Test",
-                    PinCode = "1234"
-                }
-            };
+            List<SubAreaViewModel> subAreas = _fixutre.CreateMany<SubAreaViewModel>(3).ToList();
+            string pinCode = "1234";
 
             _subAreasMock
-                .Setup(x => x.GetByPinCode(It.IsAny<string>()))
+                .Setup(x => x.GetByPinCode(pinCode))
                 .ReturnsAsync(subAreas)
                 .Verifiable();
 
             // Act
-            List<SubAreaViewModel> result = await _controller.Get("1234");
+            List<SubAreaViewModel> result = await _controller.Get(pinCode);
 
             // Assert
             result.Should().BeSameAs(subAreas);
-            _subAreasMock.Verify(sas => sas.GetByPinCode(It.IsAny<string>()), Times.Once);
+            _subAreasMock.Verify(sas => sas.GetByPinCode(pinCode), Times.Once);
         }
 
         [Theory(DisplayName =
@@ -103,18 +96,10 @@ namespace Leads.WebApi.UnitTests
         public async Task GetByPinCode_WithNullPinCode_ReturnsFilteredSubAreasList(string invalidPinCode)
         {
             // Arrange
-            List<SubAreaViewModel> subAreas = new List<SubAreaViewModel>
-            {
-                new SubAreaViewModel
-                {
-                    Id = 1,
-                    Name = "Test",
-                    PinCode = "1234"
-                }
-            };
+            List<SubAreaViewModel> subAreas = _fixutre.CreateMany<SubAreaViewModel>(3).ToList();
 
             _subAreasMock
-                .Setup(sas => sas.GetByPinCode(It.IsAny<string>()))
+                .Setup(sas => sas.GetByPinCode(invalidPinCode))
                 .ReturnsAsync(subAreas)
                 .Verifiable();
 
@@ -134,13 +119,13 @@ namespace Leads.WebApi.UnitTests
                 .Setup(x => x.GetByPinCode(It.IsAny<string>()))
                 .ThrowsAsync(new Exception())
                 .Verifiable();
-            
+
             // Act/Assert
             await _controller
                 .Invoking(c => c.Get(It.IsAny<string>()))
                 .Should()
                 .ThrowAsync<Exception>();
-            
+
             _subAreasMock.Verify(sas => sas.GetByPinCode(It.IsAny<string>()), Times.Once);
         }
     }

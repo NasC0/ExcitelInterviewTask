@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using AutoFixture;
+
 using FluentAssertions;
 
 using Leads.Models;
@@ -14,7 +16,7 @@ using Moq;
 
 using Xunit;
 
-namespace Leads.WebApi.UnitTests
+namespace Leads.WebApi.UnitTests.Tests
 {
     [Trait("Category", "Controller")]
     [Trait("Category", "Unit")]
@@ -22,68 +24,74 @@ namespace Leads.WebApi.UnitTests
     {
         private readonly Mock<ILeadsService> _leadsMock = new Mock<ILeadsService>();
         private readonly LeadsController _controller;
+        private readonly Fixture _fixture;
 
-        public LeadsControllerTests() => _controller = new LeadsController(_leadsMock.Object);
+        public LeadsControllerTests()
+        {
+            _controller = new LeadsController(_leadsMock.Object);
+            _fixture = new Fixture();
+        }
 
         [Fact(DisplayName = "Calling the Get endpoint should return a LeadViewModel")]
         public async Task Get_ValidId_ShouldReturnLeadViewModel()
         {
             // Arrange
-            LeadViewModel lead = new LeadViewModel
-            {
-                Id = Guid.NewGuid(),
-                Name = "Test",
-                SubAreaId = 1
-            };
+            Guid leadId = Guid.NewGuid();
+            LeadViewModel lead = _fixture.Build<LeadViewModel>()
+                .With(l => l.Id, leadId)
+                .Create();
 
             _leadsMock
-                .Setup(ls => ls.Get(It.IsAny<Guid>()))
+                .Setup(ls => ls.Get(leadId))
                 .ReturnsAsync(lead)
                 .Verifiable();
 
             // Act
-            ActionResult<LeadViewModel> result = await _controller.Get(Guid.NewGuid());
+            ActionResult<LeadViewModel> result = await _controller.Get(leadId);
 
             // Assert
             result.Result.Should().BeOfType<OkObjectResult>();
             result.Result.As<OkObjectResult>().Value.Should().Be(lead);
-            _leadsMock.Verify(ls => ls.Get(It.IsAny<Guid>()), Times.Once);
+            _leadsMock.Verify(ls => ls.Get(leadId), Times.Once);
         }
 
         [Fact(DisplayName = "Get endpoint should return NotFound when the id is not found")]
         public async Task Get_NonExistingId_ShouldReturnNotFound()
         {
             // Arrange
+            Guid leadId = Guid.NewGuid();
             _leadsMock
-                .Setup(ls => ls.Get(It.IsAny<Guid>()))
+                .Setup(ls => ls.Get(leadId))
                 .ReturnsAsync((LeadViewModel)null)
                 .Verifiable();
 
             // Act
-            ActionResult<LeadViewModel> result = await _controller.Get(Guid.NewGuid());
+            ActionResult<LeadViewModel> result = await _controller.Get(leadId);
 
             // Assert
             result.Result.Should().BeOfType<NotFoundResult>();
             result.Result.As<NotFoundResult>().StatusCode.Should().Be(404);
-            _leadsMock.Verify(ls => ls.Get(It.IsAny<Guid>()), Times.Once);
+            _leadsMock.Verify(ls => ls.Get(leadId), Times.Once);
         }
 
         [Fact(DisplayName = "Get endpoint should throw up the stack when an exception occurs")]
         public async Task Get_OnException_ThrowsUpStack()
         {
             // Arrange
+            Guid leadId = Guid.NewGuid();
+
             _leadsMock
-                .Setup(ls => ls.Get(It.IsAny<Guid>()))
+                .Setup(ls => ls.Get(leadId))
                 .ThrowsAsync(new Exception())
                 .Verifiable();
 
             // Act/Assert
             await _controller
-                .Invoking(c => c.Get(It.IsAny<Guid>()))
+                .Invoking(c => c.Get(leadId))
                 .Should()
                 .ThrowAsync<Exception>();
 
-            _leadsMock.Verify(ls => ls.Get(It.IsAny<Guid>()), Times.Once);
+            _leadsMock.Verify(ls => ls.Get(leadId), Times.Once);
         }
 
         [Fact(DisplayName =
@@ -91,11 +99,7 @@ namespace Leads.WebApi.UnitTests
         public async Task Post_ValidLead_ShouldReturnLeadsSaveSuccessModel()
         {
             // Arrange
-            LeadsSaveViewModel lead = new LeadsSaveViewModel
-            {
-                Name = "Test",
-                SubAreaId = 1
-            };
+            LeadsSaveViewModel lead = _fixture.Create<LeadsSaveViewModel>();
 
             Guid savedId = Guid.NewGuid();
             _leadsMock
@@ -117,10 +121,9 @@ namespace Leads.WebApi.UnitTests
         public async Task Post_NullSubAreaId_ShouldReturnBadRequest()
         {
             // Arrange
-            LeadsSaveViewModel lead = new LeadsSaveViewModel
-            {
-                Name = "Test"
-            };
+            LeadsSaveViewModel lead = _fixture.Build<LeadsSaveViewModel>()
+                .Without(l => l.SubAreaId)
+                .Create();
 
             _leadsMock
                 .Setup(ls => ls.Save(It.IsAny<LeadSaveModel>()))
@@ -134,7 +137,7 @@ namespace Leads.WebApi.UnitTests
             result
                 .Result.As<BadRequestObjectResult>()
                 .Value.Should().BeOfType<ErrorViewModel>();
-            
+
             _leadsMock.Verify(ls => ls.Save(It.IsAny<LeadSaveModel>()), Times.Never);
         }
 
@@ -142,11 +145,7 @@ namespace Leads.WebApi.UnitTests
         public async Task Post_OnException_ShouldReturnBadRequest()
         {
             // Arrange
-            LeadsSaveViewModel lead = new LeadsSaveViewModel
-            {
-                Name = "Test",
-                SubAreaId = 1
-            };
+            LeadsSaveViewModel lead = _fixture.Create<LeadsSaveViewModel>();
 
             _leadsMock
                 .Setup(ls => ls.Save(It.IsAny<LeadSaveModel>()))
@@ -161,7 +160,7 @@ namespace Leads.WebApi.UnitTests
             result
                 .Result.As<BadRequestObjectResult>()
                 .Value.Should().BeOfType<ErrorViewModel>();
-            
+
             _leadsMock.Verify(ls => ls.Save(It.IsAny<LeadSaveModel>()), Times.Once);
         }
     }

@@ -31,6 +31,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal --logger trx
     - name: Publish Test Results
+      id: test-results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: always()
       with:

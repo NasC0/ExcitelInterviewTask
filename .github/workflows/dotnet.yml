@@ -32,6 +32,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Warmup-Tests
+      run: dotnet test --no-build --verbosity quiet
     - name: Test
       run: dotnet test --no-build --verbosity normal --logger trx
     - name: Publish Test Results

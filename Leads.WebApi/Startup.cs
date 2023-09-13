@@ -42,6 +42,7 @@ namespace Leads.WebApi
 
                     services.AddScoped<ILeadsDb, LeadsEfDb>();
                     services.AddScoped<ISubAreasDb, SubAreasEfDb>();
+
                     break;
                 case "SQLite":
                     services.AddDbContext<LeadsContext>(
@@ -49,10 +50,21 @@ namespace Leads.WebApi
 
                     services.AddScoped<ILeadsDb, LeadsEfDb>();
                     services.AddScoped<ISubAreasDb, SubAreasEfDb>();
+
                     break;
                 case "FileAndStatic":
-                    services.AddScoped<ILeadsDb, LeadsFileDb>(_ => new LeadsFileDb(this.Configuration.GetConnectionString("FileDirectory")));
+                    services.AddScoped<ILeadsDb, LeadsFileDb>(_ =>
+                        new LeadsFileDb(this.Configuration.GetConnectionString("FileDirectory")));
                     services.AddScoped<ISubAreasDb, SubAreasStaticDatabase>();
+
+                    break;
+                case "LocalDb":
+                    services.AddDbContext<LeadsContext>(
+                        options => options.UseSqlServer(this.Configuration.GetConnectionString("LocalDb")));
+
+                    services.AddScoped<ILeadsDb, LeadsEfDb>();
+                    services.AddScoped<ISubAreasDb, SubAreasEfDb>();
+
                     break;
                 default:
                     throw new NotImplementedException();
@@ -63,13 +75,13 @@ namespace Leads.WebApi
 
             // Register the Swagger generator
             services.AddSwaggerGen(c =>
-                {
-                    c.SwaggerDoc("v1", new Info { Title = "Leads API", Version = "v1" });
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Leads API", Version = "v1" });
 
-                    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                    c.IncludeXmlComments(xmlPath);
-                });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,9 +106,10 @@ namespace Leads.WebApi
             switch (this.Configuration["DbType"])
             {
                 case "SqlServer":
+                case "LocalDb":
                 case "SQLite":
                     using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                        .CreateScope())
+                               .CreateScope())
                     {
                         var context = serviceScope.ServiceProvider.GetService<LeadsContext>();
 
@@ -109,6 +122,7 @@ namespace Leads.WebApi
                             context.Database.Migrate();
                         }
                     }
+
                     break;
                 case "FileAndStatic":
                     break;

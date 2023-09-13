@@ -31,4 +31,4 @@ It appears EF Core migrations in SQLite are not very well supported in .NET Core
 
 As a result, the first time you run the tests you might get a single failure in the Integration test suite. Subsequent test runs should not exhibit the same behavior and all tests should pass correctly - that's also the reason I've added a 'warmup' step in the GitHub Actions workflow.
 
-I've decided against upgrading the Solution from .NET Core 2.1 to .NET 6, as I believe that is outside the scope of the task.
+I've decided against upgrading the Solution from .NET Core 2.1 to .NET 6, as I believe that is outside the scope of the task. I've also targeted .NET Core 2.1 in the test projects in order to keep consistency with the original code.

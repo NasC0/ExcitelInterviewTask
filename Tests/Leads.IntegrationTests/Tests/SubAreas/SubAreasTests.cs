@@ -52,7 +52,7 @@ namespace Leads.IntegrationTests.Tests.SubAreas
             Mock<ISubAreasService> subAreasServiceMock = new Mock<ISubAreasService>();
             HttpClient client =
                 _webbAppFactory.SetupServiceMocksAndCreateClient(
-                    SubAreasRegistrations.RegisterSubAreasMocks(subAreasServiceMock));
+                    SubAreasRegistrations.RegisterMocks(subAreasServiceMock));
 
             subAreasServiceMock
                 .Setup(sas => sas.GetAll())
@@ -121,7 +121,7 @@ namespace Leads.IntegrationTests.Tests.SubAreas
             Mock<ISubAreasService> subAreasServiceMock = new Mock<ISubAreasService>();
             HttpClient client =
                 _webbAppFactory.SetupServiceMocksAndCreateClient(
-                    SubAreasRegistrations.RegisterSubAreasMocks(subAreasServiceMock));
+                    SubAreasRegistrations.RegisterMocks(subAreasServiceMock));
 
             subAreasServiceMock
                 .Setup(sas => sas.GetByPinCode(TestValidPinCode))

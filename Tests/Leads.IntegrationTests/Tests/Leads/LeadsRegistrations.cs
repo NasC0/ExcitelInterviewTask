@@ -7,22 +7,22 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Moq;
 
-namespace Leads.IntegrationTests.Tests.SubAreas
+namespace Leads.IntegrationTests.Tests.Leads
 {
-    public class SubAreasRegistrations
+    public class LeadsRegistrations
     {
-        public static Action<IServiceCollection> RegisterMocks(Mock<ISubAreasService> subAreasServiceMock) =>
+        public static Action<IServiceCollection> RegisterMocks(Mock<ILeadsService> leadsServiceMock) =>
             services =>
             {
                 // Remove the existing registration if any
                 ServiceDescriptor descriptor =
-                    services.SingleOrDefault(d => d.ServiceType == typeof(ISubAreasService));
+                    services.SingleOrDefault(d => d.ServiceType == typeof(ILeadsService));
                 if (descriptor != null)
                 {
                     services.Remove(descriptor);
                 }
 
-                services.AddSingleton(provider => subAreasServiceMock.Object);
+                services.AddSingleton(provider => leadsServiceMock.Object);
             };
     }
 }

@@ -8,6 +8,12 @@ The build & test GitHub Action can be seen at: https://github.com/NasC0/ExcitelI
 ### Changes to existing code
 I've added Service interfaces (`ILeadsService` & `ISubAreasService`) and I've replaced the DI registration for their concrete implementations in order to make the API Controllers testable.
 
+In addition, testability could be further improved by:
+* Implementing a ILeadsContext abstraction, in order to be able to test the EF repositories.
+* Implement a thin IFileSystem abstraction in the LeadsFileDb class in order to be able to test the data layer.
+
+For simplicity's sake, I've opted to not go ahead with those changes.
+
 ### Unit Tests
 Two Unit Test projects have been added, available in the `Tests` folder:
 * `Leads.WebApi.UnitTests`

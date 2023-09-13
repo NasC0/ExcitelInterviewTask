@@ -8,7 +8,6 @@ using FluentAssertions;
 
 using Leads.IntegrationTests.ApiClients;
 using Leads.IntegrationTests.Common;
-using Leads.IntegrationTests.Fixtures;
 using Leads.Models;
 using Leads.Services.Contracts;
 
@@ -18,6 +17,8 @@ using Xunit;
 
 namespace Leads.IntegrationTests.Tests.SubAreas
 {
+    [Trait("Category", "Integration")]
+    [Trait("Category", "SubAreas")]
     public class SubAreasTests : IClassFixture<LeadsWebApplicationFactory>
     {
         private const string TestValidPinCode = "123";

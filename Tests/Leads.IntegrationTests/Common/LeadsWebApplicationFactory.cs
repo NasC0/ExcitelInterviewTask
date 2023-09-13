@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Leads.IntegrationTests.Fixtures
+namespace Leads.IntegrationTests.Common
 {
     public class LeadsWebApplicationFactory : WebApplicationFactory<Startup>
     {

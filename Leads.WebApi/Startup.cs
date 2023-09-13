@@ -58,14 +58,6 @@ namespace Leads.WebApi
                     services.AddScoped<ISubAreasDb, SubAreasStaticDatabase>();
 
                     break;
-                case "LocalDb":
-                    services.AddDbContext<LeadsContext>(
-                        options => options.UseSqlServer(this.Configuration.GetConnectionString("LocalDb")));
-
-                    services.AddScoped<ILeadsDb, LeadsEfDb>();
-                    services.AddScoped<ISubAreasDb, SubAreasEfDb>();
-
-                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -106,7 +98,6 @@ namespace Leads.WebApi
             switch (this.Configuration["DbType"])
             {
                 case "SqlServer":
-                case "LocalDb":
                 case "SQLite":
                     using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
                                .CreateScope())
